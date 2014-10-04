@@ -13,12 +13,19 @@ class HomeController < ApplicationController
   end
 
   def show
-	@one=params[:word_one]
-	@two=params[:word_two]
-   # if @solution =~ /^[a-zA-Z]*$/
-   # else
-   #  @result = "Some of the words you entered weren't words. <br>  Perhaps you should find an easier game."
- #   end
+    load "#{Rails.root}/lib/ladder.rb"
+
+#@ar=Array.new
+#@ar=params.each {|key, val| @ar=@ar+val}    
+    
+    @ladder = Array.new
+    @ladder = params[:word_first],params[:word_one],params[:word_two],params[:word_three],params[:word_four],params[:word_five],params[:word_last] 
+    @ladder.delete_if {|word| word == ""}
+    @ladder
+    @result = legal @ladder
+    if @ladder.size < 3
+      @result = false
+    end
   end
 
 end

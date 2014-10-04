@@ -11,6 +11,10 @@ Your starting word is:
 <b><%= @word_start %></b>
 </span>
 <%= form_tag(solve_path, method: "get") do  %>
+
+    <%= hidden_field_tag 'word_first', @word_start %>
+    <%= hidden_field_tag 'word_last', @word_end %>
+
     <%= label_tag(:word_one, "Word 1: ") %>
     <%= text_field_tag(:word_one) %>
     <br>
@@ -23,6 +27,10 @@ Your starting word is:
     <%= label_tag(:word_four, "Word 4: ") %>
     <%= text_field_tag(:word_four) %>
     <br>
+    <%= label_tag(:word_five, "Word 5: ") %>
+    <%= text_field_tag(:word_five) %>
+    <br>
+
 <span style=' background-color: grey'>
 Your finishing word is: 
 <b><%= @word_end %></b>
