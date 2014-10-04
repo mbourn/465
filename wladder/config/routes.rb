@@ -55,6 +55,6 @@ Rails.application.routes.draw do
   #   end
 root "home#index"
 
-get 'query', to: 'home#show'
+get 'solve', to: 'home#show'
 
 end
