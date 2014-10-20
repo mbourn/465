@@ -1,4 +1,5 @@
 class HighScoresController < ApplicationController
+  before_action :set_high_score, only: [:show, :edit, :update, :destroy]
 
   # GET /high_scores/1
   def show
@@ -47,4 +48,14 @@ class HighScoresController < ApplicationController
     redirect_to high_scores_url, notice: 'High score was successfully destroyed.'
   end
 
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_high_score
+      @high_score = HighScore.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def high_score_params
+      params.require(:high_score).permit(:user, :game, :score)
+    end
 end
