@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   # user comes to this page to update the actual object
   patch 'high_scores/:id', to: 'high_scores#update'
 
+  # delete a specific object
+  delete 'high_scores/:id', to: 'high_scores#destroy'
+
   root 'high_scores#index'
   
 

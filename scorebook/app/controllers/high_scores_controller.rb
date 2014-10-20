@@ -40,4 +40,11 @@ class HighScoresController < ApplicationController
     end
   end
 
+  # DELETE /high_scores/1
+  def destroy
+    @high_score = HighScore.find(params[:id])
+    @high_score.destroy
+    redirect_to high_scores_url, notice: 'High score was successfully destroyed.'
+  end
+
 end
