@@ -1,0 +1,58 @@
+class RatingsController < ApplicationController
+  before_action :set_rating, only: [:edit, :update, :destroy]
+
+  # GET /professors/:professor_id/ratings
+  def index
+    @professor = Professor.find params[:professor_id]
+    @ratings = @professor.ratings
+  end
+
+  # GET professors/:professor_id/ratings/new
+  def new
+    @professor = Professor.find params[:professor_id]
+    @rating = @professor.ratings.new
+  end
+
+  # GET /ratings/1/edit
+  def edit
+  end
+
+  # POST professors:/:professor_id/ratings
+  def create
+    @professor = Professor.find params[:professor_id]
+    @rating = @professor.ratings.new(rating_params)
+
+    if @rating.save
+      redirect_to professor_ratings_url(@professor), notice: 'Rating was successfully created.'
+    else
+      render :new
+    end
+  end
+
+  # PATCH/PUT /ratings/1
+  def update
+    if @rating.update(rating_params)
+      redirect_to professor_ratings_url(@rating.professor), notice: 'Rating was successfully updated.'
+    else
+      render :edit
+    end
+  end
+
+  # DELETE /ratings/1
+  def destroy
+    @rating.destroy
+    redirect_to professor_ratings_url(@rating.professor), notice: 'Rating was successfully destroyed.'
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_rating
+      @rating = Rating.find(params[:id])
+    end
+
+    # Never trust params from the scary internet, only allow the white list through.
+    def rating_params
+      params.require(:rating).permit(:course, :comment, :rating)
+    end
+end
+
