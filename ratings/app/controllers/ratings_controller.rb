@@ -45,7 +45,7 @@ class RatingsController < ApplicationController
     @rating = @professor.ratings.new(rating_params)
 
     if @rating.save
-      redirect_to professor_ratings_url(@professor) , notice: 'Rating was successfully created.'
+      redirect_to professor_url(@professor) , notice: 'Rating was successfully created.'
     else
       render :new
     end
@@ -56,7 +56,7 @@ class RatingsController < ApplicationController
   # and cannot be changed by edit (note that professor_id is not permitted in rating_params())
   def update
     if @rating.update(rating_params)
-      redirect_to professor_ratings_url(@rating.professor), notice: 'Rating was successfully updated.'
+      redirect_to professor_url(@rating.professor), notice: 'Rating was successfully updated.'
     else
       render :edit
     end
@@ -65,7 +65,7 @@ class RatingsController < ApplicationController
   # DELETE /ratings/1
   def destroy
     @rating.destroy
-    redirect_to professor_ratings_url(@rating.professor) , notice: 'Rating was successfully destroyed.'
+    redirect_to professor_url(@rating.professor) , notice: 'Rating was successfully destroyed.'
   end
 
   private
