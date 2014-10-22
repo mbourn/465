@@ -1,0 +1,8 @@
+<p id="notice><%= notice %></p>
+
+<p>
+  <strong>Name:</string>
+  <%= @professor.name %>
+</p>
+
+<%= link_to 'Show Ratings', professor_ratings_path(@professot) %> | <%= link_to 'Edit', edit_professor_path(@professor) %> | <%= link_to 'Show all Professors', professors_path %>
