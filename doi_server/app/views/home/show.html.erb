@@ -1,13 +1,15 @@
-<%= link_to "Search Page", root_path %>
+<div name="home_show_result">
   <table>
     <tr>
-      <td>Name</td>
-      <td>DOI</td>
+      <td><strong>Name</strong></td>
+      <td><strong>DOI</strong></td>
+      <td><strong>URL</strong></td>
     </tr>
     <tr>
-      <%= @result.each do |x| %>
-        <td><%= x.name %></td>
-        <td><%= x.doi %></td>
-      <% end %>
+        <td><%= @result.name %></td>
+        <td><%= @result.doi %></td>
+        <td> <a href="<%= @result.urls.last.url %>"></td>
     </tr>
   </table>
+</div>
+<%= link_to "New Search", root_path %> | <%= link_to 'Create a new DOI', controller: "dois", action: "new" %> | <%= link_to 'View All DOIs', dois_path %> 
