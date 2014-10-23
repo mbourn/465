@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>Doi</th>
+      <th>Name</th>
       <th>Description</th>
       <th colspan="3"></th>
     </tr>
@@ -13,6 +14,7 @@
     <% @dois.each do |doi| %>
       <tr>
         <td><%= doi.doi %></td>
+        <td><%= doi.name %></td>
         <td><%= doi.description %></td>
         <td><%= link_to 'Show', doi %></td>
         <td><%= link_to 'Edit', edit_doi_path(doi) %></td>

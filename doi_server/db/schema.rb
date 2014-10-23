@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20141023002623) do
 
   create_table "dois", force: true do |t|
     t.string   "doi"
+    t.string   "name"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"

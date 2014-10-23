@@ -2,19 +2,19 @@ class DoisController < ApplicationController
   before_action :set_doi, only: [:show, :edit, :update, :destroy]
 
   # GET /dois
-  # GET /dois.json
   def index
     @dois = Doi.all
   end
 
   # GET /dois/1
-  # GET /dois/1.json
   def show
+    @url = @doi.urls.new
   end
 
   # GET /dois/new
   def new
     @doi = Doi.new
+    @doi.urls.new
   end
 
   # GET /dois/1/edit
@@ -22,18 +22,13 @@ class DoisController < ApplicationController
   end
 
   # POST /dois
-  # POST /dois.json
   def create
     @doi = Doi.new(doi_params)
 
-    respond_to do |format|
-      if @doi.save
-        format.html { redirect_to @doi, notice: 'Doi was successfully created.' }
-        format.json { render :show, status: :created, location: @doi }
-      else
-        format.html { render :new }
-        format.json { render json: @doi.errors, status: :unprocessable_entity }
-      end
+    if @doi.save
+      redirect_to @doi, notice: 'DOI was successfully created'
+    else
+      render :new
     end
   end
 
@@ -69,6 +64,6 @@ class DoisController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def doi_params
-      params.require(:doi).permit(:doi, :description)
+      params.require(:doi).permit(:name, :description, :doi, urls_attributes: [:url])
     end
 end
