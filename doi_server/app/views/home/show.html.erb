@@ -1,12 +1,13 @@
-<% link_to "Search Page", root_path %>
-
-<table>
-  <tr>
-    <td>Name</td>
-    <td>DOI</td>
-  </tr>
-  <tr>
-    <td><%= pp(@result) %></td>
-    <td> </td>
-  </tr>
-</table>
+<%= link_to "Search Page", root_path %>
+  <table>
+    <tr>
+      <td>Name</td>
+      <td>DOI</td>
+    </tr>
+    <tr>
+      <%= @result.each do |x| %>
+        <td><%= x.name %></td>
+        <td><%= x.doi %></td>
+      <% end %>
+    </tr>
+  </table>

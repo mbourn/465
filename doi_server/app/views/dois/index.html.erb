@@ -16,8 +16,7 @@
         <td><%= doi.doi %></td>
         <td><%= doi.name %></td>
         <td><%= doi.description %></td>
-        <td><%= link_to 'Show', doi %></td>
-        <td><%= link_to 'Edit', edit_doi_path(doi) %></td>
+        <td><%= link_to 'See URL History', doi %></td>
         <td><%= link_to 'Destroy', doi, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -26,4 +25,4 @@
 
 <br>
 
-<%= link_to 'New Doi', new_doi_path %>
+<%= link_to 'New DOI', new_doi_path %> | <%= link_to 'New Search', root_path %>
