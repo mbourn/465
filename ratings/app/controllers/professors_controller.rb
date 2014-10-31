@@ -35,6 +35,10 @@ class ProfessorsController < ApplicationController
     # them it will also create one (or more) new Rating objects
     @professor = Professor.new(professor_params)
 
+    @professor.ratings.each do|new_rating|
+      new_rating.user_id = current_user.id
+    end
+
     if @professor.save
       redirect_to @professor, notice: 'Professor was successfully created.'
     else

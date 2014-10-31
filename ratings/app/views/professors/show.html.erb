@@ -20,8 +20,9 @@
           <td><%= rating.course %></td>
           <td><%= rating.comment %></td>
           <td><%= rating.rating %></td>
-          <td><%= link_to 'Edit', edit_rating_path(rating) %></td>
-          <td><%= link_to 'Destroy', rating, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <!-- If this rating was created by the current user, provide edit/ delete functions -->
+            <td><%= link_to 'Edit', edit_rating_path(rating) %></td>
+            <td><%= link_to 'Destroy', rating, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
     <% end %>

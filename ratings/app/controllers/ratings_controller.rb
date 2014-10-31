@@ -29,6 +29,7 @@ class RatingsController < ApplicationController
     # This is similar to Rating.new, BUT it creates the new rating
     # in the context of a Professor object and sets the foreign key
     @rating = @professor.ratings.new
+    @rating.user_id = current_user.id
   end
 
   # GET /ratings/1/edit
@@ -43,6 +44,7 @@ class RatingsController < ApplicationController
   def create
     @professor = Professor.find params[:professor_id]
     @rating = @professor.ratings.new(rating_params)
+    @rating.user_id = current_user.id
 
     if @rating.save
       redirect_to professor_url(@professor) , notice: 'Rating was successfully created.'
