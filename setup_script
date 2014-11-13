@@ -1,0 +1,6 @@
+rails g scaffold Image filename:string public:boolean references:user
+rails g scaffold Tag msg:string references:image
+rails g model Imageuser references:image references:user
+rails g devise:install
+rails g devise user name:string
+
