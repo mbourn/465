@@ -8,10 +8,11 @@
     <% @count = 0 %>
     <% @pub_images = Image.where(:public => TRUE) %>
     <% @pub_images.each do |image| %>
-        <td><%= image_tag root_url + "/images/" + image.filename, size: "100x100", alt: image.filename %><br>
+      <td><%= link_to image do %>
+        <%= image_tag root_url + "/images/" + image.filename, size: "110x110", alt: image.filename %><br>
+      <% end %>
         <% if( current_user ) %>
           <% if( image.user.id == current_user.id) %>
-            <%= link_to 'Show', image %>
             <%= link_to 'Edit', edit_image_path(image) %>
             <%= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           <% end %>
@@ -36,8 +37,9 @@
   <% @count = 0 %>
   <% @priv_images = Image.where(['public = ? AND user_id = ?', FALSE, current_user.id]) %>
   <% @priv_images.each do |image| %>
-    <td><%= image_tag root_url + "/images/" + image.filename, size: "100x100", alt: image.filename %><br>
-    <%= link_to 'Show', image %>
+    <td><%= link_to image do %>
+      <%= image_tag root_url + "/images/" + image.filename, size: "110x110", alt: image.filename %><br>
+    <% end %>
     <%= link_to 'Edit', edit_image_path(image) %>
     <%= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' } %></td>
     <% @count += 1 %>
