@@ -45,17 +45,6 @@ class ImagesController < ApplicationController
     end
 
 
-    if( params[:image][:user_id] )
-      user_ids = params[:image][:user_id].compact
-      user_ids.each{ |u|  if( u != "" )
-                            iuser = Imageuser.new
-                            iuser.user_id = u
-                            iuser.image_id = params[:image_id]
-                            #iuser.image_id = Image.where(['filename = ?', @image.filename]).pluck(:id)
-                            iuser.save
-                          end
-      }
-    end
 
 #    respond_to do |format|
 #      if @image.save
@@ -71,15 +60,24 @@ class ImagesController < ApplicationController
   # PATCH/PUT /images/1
   # PATCH/PUT /images/1.json
   def update
-    respond_to do |format|
-      if @image.update(image_params)
-        format.html { redirect_to @image, notice: 'Image was successfully updated.' }
-        format.json { render :show, status: :ok, location: @image }
-      else
-        format.html { render :edit }
-        format.json { render json: @image.errors, status: :unprocessable_entity }
-      end
+    iuser = Imageuser.new
+    iuser.user_id = params[:image][:user_id]
+    iuser.image_id = @image.id
+    if iuser.save
+      redirect_to @image, notice: 'Access was successfully granted.'
+    else
+      render :new
     end
+
+#    respond_to do |format|
+#      if @image.update(image_params)
+#        format.html { redirect_to @image, notice: 'Image was successfully updated.' }
+#        format.json { render :show, status: :ok, location: @image }
+#      else
+#        format.html { render :edit }
+#        format.json { render json: @image.errors, status: :unprocessable_entity }
+#      end
+#    end
   end
 
   # DELETE /images/1

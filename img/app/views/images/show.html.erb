@@ -13,16 +13,25 @@
 
         <!-- Display the image and info about the image -->
         <% if( @image.public ) %>
-          <p>This image is set to <b>public</b></p>
+          <p>This <b>public</b>  
         <% else %>
-          <p>This image is set to <b>private</b></p>
+          <p>This <b>private</b> 
         <% end %>
 
-        <p> 
-          <strong>Image Owner:</strong>
-          <%= @image.user.email %>
+        image belongs to <b><%= @image.user.name %></b>
         </p>
-        <% if( @image.public || @image.user_id == current_user.id ) %>  
+        <!-- Get a list of user_ids with whom this image has been shared -->
+        <% shared_list = Imageuser.where(['image_id = ?', @image.id]).pluck("user_id")  %>
+        <% shared = false %>
+
+        <!-- Determine if the current user is on that list -->
+        <% shared_list.each do |id| %>
+          <% if( current_user.id == id ) %>
+            <% shared = true %>
+          <% end %>
+        <% end %>
+
+        <% if( @image.public || @image.user_id == current_user.id || shared ) %>  
           <%= image_tag root_url + "/images/" + @image.filename,  alt: @image.filename %><br>
         <% end %>
         <% if current_user && @image.user_id == current_user.id %>
@@ -32,22 +41,26 @@
       </td>
       
       <td>
+          <!-- Imageuser Access display and modify section -->          
         <% if( current_user && @image.user_id == current_user.id ) %>
           <h3>Users who have access to the image</h3>
           <% @users = Imageuser.where(['image_id = ?', @image.id]).pluck("user_id") %>
           <% @users.each do |u| %>
-            <%= User.where(['id = ?', u]).pluck("name") %><br>
+            <%= User.where(['id = ?', u]).pluck("name")[0] %><br>
           <% end %>
 
-          <!-- Imageuser Access display and modify section -->          
-          <h3>Add Access to Image to Other Users</h3>
+          <h3>Grant Access to Image to Other Users</h3>
           <div class="field">
             <%= form_for(@image) do |f| %>
-              <% options_array = User.where(['id != ?',current_user.id]).pluck(:id, :name, :email).map %>
-              <% options_array = options_array.each{ |y| y = [ y[1]+" "+y[2], y[0] ]} %>
+              <% sql = "select id, name, email from Users where id NOT IN (select user_id from Imageusers where image_id = " + @image.id.to_s  + ")" %>
+              <% result = User.find_by_sql(sql) %>
+              <% options_array = Array.new %>
+              <% options_array = result.map do |y| %>
+                <% [y[:name] +" "+ y[:email], y[:id]]  %>
+              <% end %>
               <%= f.hidden_field :image_id, :value => @image.id %> 
-              <%= f.select( :user_id, options_for_select(options_array), {},:multiple => true ) %><br>
-              <%= f.submit %>
+              <%= f.select( :user_id, options_for_select(options_array), {} ) %><br>
+              <p> <%= f.submit %> </p>
             <% end %> 
           </div>
         <% end %>
@@ -65,8 +78,8 @@
             <% if( counter >= 0 ) %>
               <% if( current_user.id == @image.user_id ) %>
                 <%= link_to "Edit", edit_tag_path(tag) %> | <%= link_to 'Destroy', tag, method: :delete,  data: {confirm: 'Are you sure?' } %>
-                <%= tag.msg %><br>
               <% end %>
+              <%= tag.msg %><br>
             <% end %>
             <% counter += 1 %>
           <% end %>
