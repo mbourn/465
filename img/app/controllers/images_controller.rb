@@ -10,6 +10,7 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.json
   def show
+    @tag = @image.tags.new
   end
 
   # GET /images/new
@@ -29,15 +30,31 @@ class ImagesController < ApplicationController
     @image.user_id = current_user.id
 
     @uploaded_io = params[:image][:uploaded_file]
-
-    File.open(Rails.root.join('public', 'images', @image.filename), 'wb') do |file|
-      file.write(@uploaded_io.read)
+    if (!@uploaded_io)
+      redirect_to new_image_path, alert: "You must select an image to upload!" and return
+    else
+      File.open(Rails.root.join('public', 'images', @image.filename), 'wb') do |file|
+        file.write(@uploaded_io.read)
+      end
     end
 
     if @image.save
       redirect_to @image, notice: 'Image was successfully created.'
     else
       render :new
+    end
+
+
+    if( params[:image][:user_id] )
+      user_ids = params[:image][:user_id].compact
+      user_ids.each{ |u|  if( u != "" )
+                            iuser = Imageuser.new
+                            iuser.user_id = u
+                            iuser.image_id = params[:image_id]
+                            #iuser.image_id = Image.where(['filename = ?', @image.filename]).pluck(:id)
+                            iuser.save
+                          end
+      }
     end
 
 #    respond_to do |format|

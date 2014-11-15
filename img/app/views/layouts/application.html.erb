@@ -9,9 +9,8 @@
 <body>
 <div id="user_nav">
   <% if user_signed_in? %>
-  <b>Signed in as</b></h4><%= current_user.name %>.</h4><b>Not you?</b>
+    Signed in as <b><%= current_user.name %></b>. Not you?
     <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
-    <hr><%= current_user.name %> | <%= current_user.id %> | <%= current_user.email %><hr>
   <% else %>
     <%= link_to "Sign up", new_user_registration_path %> or
     <%= link_to "Sign in", new_user_session_path %>

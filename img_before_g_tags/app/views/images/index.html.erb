@@ -1,0 +1,59 @@
+<h1>Listing images</h1>
+
+<div id="public_pics">
+<h1>Public Pictures</h1>
+<table>
+  <tbody>
+    <tr>
+    <% @count = 0 %>
+    <% @pub_images = Image.where(:public => TRUE) %>
+    <% @pub_images.each do |image| %>
+      <td><%= link_to image do %>
+        <%= image_tag root_url + "/images/" + image.filename, size: "110x110", alt: image.filename %><br>
+      <% end %>
+        <% if( current_user ) %>
+          <% if( image.user.id == current_user.id) %>
+            <%= link_to 'Edit', edit_image_path(image) %>
+            <%= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% end %>
+        <% end %>
+
+        <% @count += 1 %>
+        <% if( @count % 6 == 0 ) %>
+          </tr><tr>
+        <% end %>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<% if( current_user ) %>
+<div id="private_pics">
+<h1>Private Pictures</h1>
+<table>
+  <tbody>
+  <tr>
+  <% @count = 0 %>
+  <% @priv_images = Image.where(['public = ? AND user_id = ?', FALSE, current_user.id]) %>
+  <% @priv_images.each do |image| %>
+    <td><%= link_to image do %>
+      <%= image_tag root_url + "/images/" + image.filename, size: "110x110", alt: image.filename %><br>
+    <% end %>
+    <%= link_to 'Edit', edit_image_path(image) %>
+    <%= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% @count += 1 %>
+    <% if( @count % 6 == 0 ) %>
+      </tr><tr>
+    <% end %>
+  <% end %>
+  </tr>
+  </tbody>
+</table>
+</div>
+<% end %>
+
+<br>
+<% if( current_user ) %>
+  <%= link_to 'New Image', new_image_path %>
+<% end %>

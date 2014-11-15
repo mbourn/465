@@ -10,13 +10,21 @@
       </ul>
     </div>
   <% end %>
-
-  <%= f.file_field :uploaded_file %> 
+  
+  <% if( params[:action] != "edit" ) %>
+    <%= f.file_field :uploaded_file %> 
+  <% end %> 
   <div class="field">
     <%= f.label :public %><br>
     <%= f.check_box :public %>
   </div>
+  
+
   <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
+
+
+
+
