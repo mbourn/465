@@ -40,7 +40,8 @@ class TagsController < ApplicationController
 
   def destroy
     @tag.destroy
-    redirect_to show_image_url(@tag.image), notice: 'Tag was destroyed successfully'
+    @image = Image.find @tag.image_id
+    redirect_to @image, notice: 'Tag was destroyed successfully'
   end
 
   private

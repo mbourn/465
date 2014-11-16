@@ -10,10 +10,10 @@
       </ul>
     </div>
   <% end %>
-  
-  <% if( params[:action] != "edit" ) %>
-    <%= f.file_field :uploaded_file %> 
+  <% if( params[:action] == "edit" ) %>
+    <%= image_tag root_url + "/images/" + @image.filename,  alt: @image.filename %><br>
   <% end %> 
+  <%= f.file_field :uploaded_file %> 
   <div class="field">
     <%= f.label :public %><br>
     <%= f.check_box :public %>

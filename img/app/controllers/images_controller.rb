@@ -43,42 +43,46 @@ class ImagesController < ApplicationController
     else
       render :new
     end
-
-
-
-#    respond_to do |format|
-#      if @image.save
-#        format.html { redirect_to @image, notice: 'Image was successfully created.' }
-#        format.json { render :show, status: :created, location: @image }
-#      else
-#        format.html { render :new }
-#        format.json { render json: @image.errors, status: :unprocessable_entity }
-#      end
-#    end
   end
 
   # PATCH/PUT /images/1
   # PATCH/PUT /images/1.json
   def update
-    iuser = Imageuser.new
-    iuser.user_id = params[:image][:user_id]
-    iuser.image_id = @image.id
-    if iuser.save
-      redirect_to @image, notice: 'Access was successfully granted.'
+    @image.public = params[:image][:public]
+    @uploaded_io = params[:image][:uploaded_file]
+    if( @uploaded_io )
+      @image.filename = "#{SecureRandom.urlsafe_base64}.jpg"
+      File.open(Rails.root.join('public', 'images', @image.filename), 'wb') do |file|
+        file.write( @uploaded_io.read )
+      end
+    end
+   
+    if( params[:image][:add_user] )
+      if( params[:image][:user_id] )
+        @iuser = Imageuser.new
+        @iuser.user_id = params[:image][:user_id]
+        @iuser.image_id = params[:image][:image_id]
+        if( @iuser.save )
+          redirect_to @image, notice: 'Access successfully granted to the user' and return
+        end
+      end
+    end
+
+    if ( params[:image][:remove_user] )
+      @iuser = Imageuser.where(['image_id = ? AND user_id = ?', params[:image][:image_id], params[:image][:user_id]]).pluck("id")
+      Imageuser.delete(@iuser)
+      
+      redirect_to @image, notice: 'Access was successfully removed from the user.'and return
+    end
+   
+
+    if @image.save
+      redirect_to @image, notice: 'Image was successfully updated.' and return
     else
       render :new
     end
-
-#    respond_to do |format|
-#      if @image.update(image_params)
-#        format.html { redirect_to @image, notice: 'Image was successfully updated.' }
-#        format.json { render :show, status: :ok, location: @image }
-#      else
-#        format.html { render :edit }
-#        format.json { render json: @image.errors, status: :unprocessable_entity }
-#      end
-#    end
   end
+  
 
   # DELETE /images/1
   # DELETE /images/1.json

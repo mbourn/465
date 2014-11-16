@@ -36,12 +36,13 @@
         <% end %>
         <% if current_user && @image.user_id == current_user.id %>
           <%= link_to 'Edit', edit_image_path(@image) %> | 
+          <%= link_to 'Destroy', @image, method: :delete, data: { confirm: 'Are you sure?' } %> |
         <% end %>
         <%= link_to 'Back', images_path %>
       </td>
       
+      <!-- Imageuser Access display and modify section -->          
       <td>
-          <!-- Imageuser Access display and modify section -->          
         <% if( current_user && @image.user_id == current_user.id ) %>
           <h3>Users who have access to the image</h3>
           <% @users = Imageuser.where(['image_id = ?', @image.id]).pluck("user_id") %>
@@ -52,16 +53,41 @@
           <h3>Grant Access to Image to Other Users</h3>
           <div class="field">
             <%= form_for(@image) do |f| %>
-              <% sql = "select id, name, email from Users where id NOT IN (select user_id from Imageusers where image_id = " + @image.id.to_s  + ")" %>
-              <% result = User.find_by_sql(sql) %>
-              <% options_array = Array.new %>
-              <% options_array = result.map do |y| %>
-                <% [y[:name] +" "+ y[:email], y[:id]]  %>
+              <% u_ids = User.all.pluck("id") - Imageuser.where(['image_id = ?', @image.id]).pluck("user_id") %>
+              <% u_ids.delete(current_user.id) %>
+              <% opts_array = u_ids.map do |u| %>
+                <% user = User.find(u) %>
+                <% [user[:name] +" "+ user[:email], user[:id]]  %>
               <% end %>
+              <%= f.hidden_field :add_user, :value => "add_user" %>
               <%= f.hidden_field :image_id, :value => @image.id %> 
-              <%= f.select( :user_id, options_for_select(options_array), {} ) %><br>
+              <%= f.select( :user_id, options_for_select(opts_array), {} ) %><br>
               <p> <%= f.submit %> </p>
             <% end %> 
+          </div>
+        <% end %>
+      </td>
+
+      <!-- Remove access from users -->
+      <td>
+        <% if( current_user && current_user.id == @image.user_id ) %>
+          <h3>Remove Access to Image from Other Users</h3>
+          <div class="field">
+            <%= form_for(@image) do |f| %>
+              <% @user_list = Array.new %>
+              <% @users.each do |u| %>
+                <% @user_list.concat( User.where(['id = ?', u ]).pluck("name", "email", "id")) %>
+              <% end %>
+              <% opts_array = @user_list.map do |u| %>
+                <% if( current_user.id != u[2] ) %>
+                  <% [u[0] +" "+ u[1], u[2]] %>
+                <% end %>
+              <% end %>
+              <%= f.hidden_field :remove_user, :value => "remove_user" %>
+              <%= f.hidden_field :image_id, :value => @image.id %>
+              <%= f.select( :user_id, options_for_select(opts_array), {} ) %><br>
+              <p><%= f.submit %></p>
+            <% end %>
           </div>
         <% end %>
       </td>
@@ -76,7 +102,7 @@
         <% @image.tags.each do |tag| %>
           <% if( !tag.new_record? ) %>
             <% if( counter >= 0 ) %>
-              <% if( current_user.id == @image.user_id ) %>
+              <% if( current_user && current_user.id == @image.user_id ) %>
                 <%= link_to "Edit", edit_tag_path(tag) %> | <%= link_to 'Destroy', tag, method: :delete,  data: {confirm: 'Are you sure?' } %>
               <% end %>
               <%= tag.msg %><br>
@@ -86,8 +112,10 @@
         <% end %>
       </td>
       <td>
-        <h3>Create New Tag</h3>
-        <%= render 'tags/form' %>
+        <% if( current_user && current_user.id == @image.user_id ) %>
+          <h3>Create New Tag</h3>
+          <%= render 'tags/form' %>
+        <% end %>
       </td>
     </tr>
   </table>
