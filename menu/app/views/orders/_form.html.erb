@@ -1,0 +1,78 @@
+<%= form_for(@order) do |f| %>
+  <% if @order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+      <% @order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<%# Get the current time and determine which meal is currently being served %>
+<% @time = Time.new.strftime("%H").to_i %>
+<% if @time >= 6 && @time < 11 %>
+  <% @meal = 1; @menu = 'Breakfast' %>
+<% elsif @time >= 11 && @time < 15 %>
+  <% @meal = 2; @menu = 'Lunch' %>
+<% else %>
+  <% @meal = 3; @menu = 'Dinner' %>
+<% end %>
+
+  <h2>Please select an item to add to your order:</h2><br>
+  <div class='add_item_form'>
+    <% item_ids = Item.where(:menu => @meal ).pluck("id") %>
+    <% opts_array = item_ids.map do |i| %>
+      <% item = Item.find(i) %>
+      <% [item[:name] + " " + item[:price].to_s, item[:id]] %>
+    <% end %>
+    <%= f.hidden_field :add_item, :value => "add_item" %>
+    <%= f.hidden_field :order_id, :value => @order.id %>
+  </div>
+
+<h3>We Are Currently Serving <%= @menu %></h3>
+<table>
+  <thead>
+  </thead>
+  <tbody>
+    <% @items = Item.where(:menu => @meal) %>
+    <% @items.each do |item| %>
+      <tr>
+        <td>Quantity: <input type="text" name="<%= item.id %>" size=2></td>
+          <input type='hidden' name="u_id" value="<%= current_user.id %>">
+        <td><%= image_tag  item.pic, size: "210x150", alt: item.pic %><br>
+          <h3> <%= item.name %></h3></td>
+        <td><%= item.desc %></td>
+        <td><%= item.price %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>Kid's Menu</h3>
+<table>
+  <thead></thead>
+  <tbody>
+  <% @kids = Item.where(:kid => true ) %>
+  <% @kids.each do |item| %>
+    <tr>
+      <td>Quantity: <input type="text" name="<%= item.id %>" size=3></td>
+      <td><%= image_tag item.pic, size: "210x150", alt: item.pic %><br>
+        <h3><%= item.name %></h3></td>
+      <td><%= item.desc %></td>
+      <td><%= item.price %></td>
+    </tr>
+  <% end %>
+    <tr>
+      <td>Any special requests or instructions?</td>
+      <td colspan=3><textarea name="req" cols=50 rows=6></textarea></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,60 @@
+<% if current_user %>
+  <%= link_to 'Create a New Order', new_order_path %>
+<% end %>
+<%# Get the current time and determine which meal is currently being served %>
+<% @time = Time.new.strftime("%H").to_i %>
+<% if @time >= 6 && @time < 11 %>
+  <% @meal = 1; @menu = 'Breakfast' %>
+<% elsif @time >= 11 && @time < 15 %>
+  <% @meal = 2; @menu = 'Lunch' %>
+<% else %>
+  <% @meal = 3; @menu = 'Dinner' %>
+<% end %>
+<h1>We Are Currently Serving <%= @menu %></h1>
+<table>
+  <thead>
+  </thead>
+
+  <tbody>
+    <% @items = Item.where(:menu => @meal) %>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= image_tag  item.pic, size: "210x150", alt: item.pic %><br>
+          <h3> <%= item.name %></h3></td>
+        <td><%= item.desc %></td>
+        <td><%= item.price %></td>
+        <% if( current_user && current_user.email == "admin@example.com") %>
+          <td><%= link_to 'Show', item %></td>
+          <td><%= link_to 'Edit', edit_item_path(item) %></td>
+          <td><%= link_to 'Destroy', item, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h1>Kid's Menu</h1>
+<table>
+  <thead></thead>
+  <tbody>
+  <% @kids = Item.where(:kid => true ) %>
+  <% @kids.each do |item| %>
+    <tr>
+      <td><%= image_tag item.pic, size: "210x150", alt: item.pic %><br>
+        <h3><%= item.name %></h3></td>
+      <td><%= item.desc %></td>
+      <td><%= item.price %></td>
+      <% if( current_user && current_user.email == "admin@example.com") %>
+        <td><%= link_to 'Show', item %></td>
+        <td><%= link_to 'Edit', edit_item_path(item) %></td>
+        <td><%= link_to 'Destroy', item, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+      <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<br>
+
+<% if current_user && current_user.email == "admin@example.com" %>
+  <%= link_to 'New Item', new_item_path %>
+<% end %>
