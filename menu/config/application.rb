@@ -19,5 +19,12 @@ module Menu
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    initializer 'setup_asset_pipeline', :group => :all do |app|
+      app.config.assets.precompile.shift
+      app.config.assets.precompile.push(Proc.new do |path|
+        File.extname(path).in? [
+          '.html', '.erb', '.haml','.png','.gif','.jpg','.jpeg','.eot','.otf','.svc','.woff','.ttf' ]
+      end)
+    end
   end
 end

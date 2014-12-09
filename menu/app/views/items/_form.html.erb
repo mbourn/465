@@ -16,8 +16,11 @@
     <%= f.text_field :price %>
   </div>
   <div class="field">
-    <%= f.label :pic %><br>
-    <%= f.text_field :pic %>
+    <%= f.file_field :uploaded_file %><br>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
   </div>
   <div class="field">
     <%= f.label :allergy %><br>
@@ -30,6 +33,10 @@
   <div class="field">
     <%= f.label :desc %><br>
     <%= f.text_field :desc %>
+  </div>
+  <div class="field">
+    <%= f.label :menu %><br>
+    <%= f.text_field :menu %>
   </div>
   <div class="field">
     <%= f.label :glut %><br>

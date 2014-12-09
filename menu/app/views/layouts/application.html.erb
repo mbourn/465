@@ -2,17 +2,25 @@
 <html>
 <head>
   <title>Menu</title>
+  <%= javascript_include_tag "application" %>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <script src="jquery.js" type="text/javascript"></script>
+  <link href="facebox/facebox.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="facebox/facebox.js" type="text/javascript"></script>
+  <script> jQuery(document).ready(function($) {
+            $('a[rel*=facebox]').facebox() 
+          })
+  </script> 
 </head>
 <body>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
   <div id="user_nav">
     <% if user_signed_in? %>
-      Welcome<%= current_user.email %>! Not you?
-      <%= link_to "Sign out", destroy_user_session_path, method: :delete %><br>
+      Welcome: <b><%= current_user.email %></b>! Not you?
+      <%= link_to "Sign out", destroy_user_session_path, :method => :get %><br>
 
       <a id="display_text" href="javascript:toggle('toggle_text', 'display_text');">Show</a> Order History
       <div id='toggle_text' style="display: none;">

@@ -5,6 +5,9 @@ Rails.application.routes.draw do
 
   resources :items
 
+  #devise_scope :user do
+  #  match '/users/sign_out' => 'sessions#destroy', via: [:get, :delete]
+  #end
 
   root 'items#index'
   # The priority is based upon order of creation: first created -> highest priority.
