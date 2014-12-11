@@ -1,59 +1,39 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Price:</strong>
-  <%= @item.price %>
-</p>
+<div id="main">
+  <section id="pic">
+    <%= image_tag @item.pic, size: "210x150", alt: @item.name %>
+    <br><b><%= @item.name %> | <%= @item.price %></b><br><br>
+  </section>
 
-<p>
-  <strong>Name:</strong>
-  <%= @item.name %>
-</p>
+  <section id="attribs">
+    <% if( @item.allergy != 'none' ) %>
+      -This plate conatins these possible <b>allergens</b>:<br><b><%= @item.allergy %></b><br>
+    <% else %>
+      -This plate does <b>not</b> contain any <b>common allergens</b><br>
+    <% end %>
 
-<p>
-  <strong>Pic:</strong>
-  <%= @item.pic %>
-</p>
+    <% if( @item.glut == true ) %>
+      -This plate is <b>Gluten Free</b><br>
+    <% end %>
+    <% if( @item.veg == true ) %>
+      -This plate is <b>Vegetarian</b><br>
+    <% end %>
+    <% if( @item.vegan == true ) %>
+      -This plate is <b>Vegan</b><br>
+    <% end %>
+  </section>
 
-<p>
-  <strong>Allergy:</strong>
-  <%= @item.allergy %>
-</p>
+  <section id="desc">
+    <br>Plate Descrtion:<br>
+    <aside>
+      <%= @item.desc %>
+    </aside>
+  </section>
 
-<p>
-  <strong>Recipe:</strong>
-  <%= @item.recipe %>
-</p>
 
-<p>
-  <strong>Desc:</strong>
-  <%= @item.desc %>
-</p>
-
-<p>
-  <strong>Glut:</strong>
-  <%= @item.glut %>
-</p>
-
-<p>
-  <strong>Veg:</strong>
-  <%= @item.veg %>
-</p>
-
-<p>
-  <strong>Vegan:</strong>
-  <%= @item.vegan %>
-</p>
-
-<p>
-  <strong>Menu:</strong>
-  <%= @item.menu %>
-</p>
-
-<p>
-  <strong>Kid:</strong>
-  <%= @item.kid %>
-</p>
-
-<%= link_to 'Edit', edit_item_path(@item) %> |
-<%= link_to 'Back', items_path %>
+  <% if( current_user.email == "admin@example.com" ) %>
+    <%= link_to 'Edit', edit_item_path(@item) %> |
+  <% end %>
+  <b><%= link_to 'Back To The Menu', items_path %></b>
+</div>

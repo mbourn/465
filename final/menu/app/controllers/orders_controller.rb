@@ -25,6 +25,28 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
+    @order.save #This creates the order and gives us the order_id to use later
+    @order.uid = params[:u_id]
+    @order.promise_time = Time.now.localtime + 900 # 15 minutes from when the order is created 
+    @order.req = params[:req]
+
+    @price = 0
+    ctr = Item.count
+    (1..ctr).each do |i|
+      if( params[i.to_s].to_i > 0 )
+        quant = params[i.to_s].to_i
+        item_cost = Item.find(i)[:price]
+        @price = @price + (item_cost * quant)
+
+        @oi = OrderItem.new
+        @oi.order_id = @order.id
+        @oi.item_id = i
+        @oi.quant = quant
+        @oi.save
+      end
+    end
+
+    @order.charge = @price
 
     respond_to do |format|
       if @order.save

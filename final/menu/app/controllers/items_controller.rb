@@ -25,6 +25,15 @@ class ItemsController < ApplicationController
   # POST /items.json
   def create
     @item = Item.new(item_params)
+    @item.pic = params[:item][:uploaded_file].original_filename
+    @uploaded_io = params[:item][:uploaded_file]
+    if(!@uploaded_io)
+      redirect_to new_item_path, alert: "You must select an image to upload!" and return
+    else
+      File.open(Rails.root.join('public', 'images', @item.pic), 'wb') do |file|
+        file.write(@uploaded_io.read)
+      end 
+    end
 
     respond_to do |format|
       if @item.save
